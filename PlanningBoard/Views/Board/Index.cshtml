@@ -1,0 +1,369 @@
+﻿@using PlanningBoard.Extensions
+@model PlanningBoard.ViewModels.BoardViewModel
+@{
+
+    ViewBag.Title = "Home Page";
+}
+
+<div id="board" class="col-sm-12">
+    @foreach (var column in Model.Columns)
+    {
+        <div class="col-sm-3">
+            <h2 style="font-family: IndieFlower; width: 100%">@column.Name</h2>
+            <br />
+
+            <ul style="min-height: 400px" id="@Html.Raw("column_" + column.Id)">
+                @foreach (var task in Model.Tasks.Where(t => t.ColumnId == column.Id))
+                {
+                    <li id="@Html.Raw("task_" + task.Id)" draggable="true" class="task smallshadow" 
+                        style="background: @Model.Colors.Single(c => c.Id == task.ColorId).ColorCode">
+                        <div>
+                            <div class="taskOwner" style="float:left">#@task.Id</div>
+                            <div class="taskTitle">
+                                <b>@task.Title</b><br />
+                            </div>
+                            <div class="taskText">
+                                @task.Description.Left(200, true)
+                            </div>
+                            <div class="taskOwner">@task.Owner</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="editForm" method="POST" action="@Url.Action("EditTask")">
+                <input name="BoardId" type="hidden" value="@Model.Board.Id" />
+                <input id="taskIdField" name="Id" type="hidden" value="" />
+                <input id="taskColumnId" name="ColumnId" type="hidden" value="" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        <span class="fa fa-pencil-square-o"></span>&nbsp;Add/Edit Task
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12">
+                        <label for="Title">Title:</label>
+                        <input name="Title" id="taskTitle" value="" class="form-control" style="font-size: x-large; height: 50px"
+                            placeholder="Task Title" data-val="true" data-val-required="Title Required" />
+                        <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="col-sm-12">
+                        <label for="Description">Description:</label>
+                        <textarea cols="20" rows="3" name="Description" id="taskDescription" class="form-control"
+                            placeholder="Task Description"
+                            data-val="true" data-val-required="Description Required"></textarea>
+                        <span class="field-validation-valid" data-valmsg-for="Description" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="col-sm-9">
+                        <label for="Owner">Owner:</label>
+                        <input type="text" name="Owner" id="taskOwner" class="form-control" placeholder="Task Owner" />
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="Prio">Prio:</label>
+                        <input name="Prio" id="taskPrio" value="" class="form-control"
+                            type="number" min="1" max="100"
+                            data-val="true" data-val-required="1-100" />
+                        <span class="field-validation-valid" data-valmsg-for="Prio" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="margin-top: 15px">
+                            <label>Note Color:</label>
+                        </div>
+                        <div class="btn-group col-sm-9" data-toggle="buttons" style="margin-top: 10px">
+                            @foreach (var color in Model.Colors)
+                            {
+                                <label class="btn" id="color_@color.Id" style="background: @color.ColorCode">@color.Name
+                                    <input id="colorRadio_@color.Id" type="radio" name="ColorId" value="@color.Id" />
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row"></div>
+                <br />
+                <div class="modal-footer">
+                    <button id="taskSaveButton" value="Save" class="btn btn-primary"><span class="fa fa-save"></span>&nbsp;Save</button>
+                    <button class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span>&nbsp;Cancel</button>
+                    <button id="taskDeleteButton" value="delete" name="delete" class="btn btn-danger"
+                        onclick=" return confirm('Are You Sure?'); ">
+                        <span class="fa fa-trash-o"></span>&nbsp;Delete Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addColumnModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" action="@Url.Action("AddColumn")">
+                <input type="hidden" name="BoardId" value="@Model.Board.Id" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" >
+                        <span class="fa fa-pencil-square-o"></span>&nbsp;Add Column
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12">
+                        <label for="Name">Name:</label>
+                        <input id="name" name="Name" class="form-control" style="font-size: x-large; height: 50px"
+                            placeholder="New Column Name" data-val="true" data-val-required="Required" />
+                        <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="row"></div>
+                <br />
+                <div class="modal-footer">
+                    <button value="Save" class="btn btn-primary"><span class="fa fa-save"></span>&nbsp;Save</button>
+                    <button class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span>&nbsp;Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="signalr/hubs"></script>
+
+    <script>
+        var draggedItemId = null;
+        var targetColumn = null;
+        var hubby = null;
+
+        /* ideas about supporting signal-r and multiple users
+        function deleteTask() {
+            if (confirm('Are You Sure?')) {
+                var deltaskid = $("#taskIdField").val();
+                hubby.server.delete(deltaskid).done(function () {
+                    console.log("returned from delete message");
+                    $("#taskDeleteField").val("delete");
+                    $("#editForm").submit();
+                });
+                return false;
+            } else {    //user cancelled delete task
+                $("#taskDeleteField").val("");
+                return false;
+            }
+        }
+
+        function saveTask() {
+                var taskid = $("#taskIdField").val();
+                hubby.server.update(taskid).done(function () {
+                    console.log("returned from update message");
+                    $("#taskDeleteField").val("delete");
+                    $("#editForm").submit();
+                });
+                return false;
+        }
+        */
+
+        function startHubStuff() {
+            hubby = $.connection.taskHub;
+
+            hubby.client.added = function (id) {
+                console.log("added: " + id);
+            };
+            hubby.client.updated = function (id) {
+                console.log("updated: " + id);
+            };
+            hubby.client.deleted = function (id) {
+                console.log("deleted: " + id);
+            };
+
+            $.connection.hub.start().done(function () {
+                console.log('connected...');
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            $("#NewColumnLink").click(function() {
+                $("#addColumnModal").modal();
+            });
+
+            $("#NewTaskLink").click(function () {
+                $("#taskIdField").val("0");
+                $("#taskTitle").val("");
+                $("#taskDescription").val("");
+                $("#taskOwner").val("");
+                $("#taskPrio").val("10");
+                $("#taskColumnId").val("1");
+                $("#colorRadio_1").closest(".btn").button('toggle');
+
+                $("#taskDeleteButton").hide();
+                $("#editModal").modal();
+            });
+
+            $(".task").dblclick(function () {
+                var taskId = $(this).attr("id");
+
+                //get the task from database
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '@Url.Action("GetTask")/' + taskId + '?' + new Date().getTime(),
+                    success: function (data) {
+                        $("#taskIdField").val(data.id);
+                        $("#taskTitle").val(data.title);
+                        $("#taskDescription").val(data.text);
+                        $("#taskOwner").val(data.owner);
+                        $("#taskPrio").val(data.prio);
+                        $("#taskColumnId").val(data.columnId);
+                        $("#colorRadio_" + data.colorId).closest(".btn").button('toggle');
+                    }
+                });
+
+                $("#taskDeleteButton").show();
+                $("#editModal").modal();
+                $("#taskTitle").focus();
+            });
+
+            // things to do when the new column dialog is displayed
+            $("#addColumnModal").on('shown.bs.modal', function () {
+                 $("#name").focus();
+            });
+
+            // things to do when the new/edit dialog is displayed
+            $("#editModal").on('shown.bs.modal', function () {
+
+                if ($("#taskIdField").val() == "0")
+                    $("#taskTitle").focus();
+                else {
+                    $("#taskDescription").focus();
+                }
+
+                setupTextcomplete();
+            });
+
+            // things to do when the new/edit dialog is closed
+            $("#editModal").on('hidden.bs.modal', function () {
+                $("#taskOwner").textcomplete('destroy');
+            });
+
+            //move cursor to end when description gets focus
+            $("#taskDescription").focus(function () {
+                this.selectionStart = this.selectionEnd = this.value.length;
+            });
+
+            function setupTextcomplete() {
+
+                $("#taskOwner").textcomplete([
+                    {
+                        match: /(^|\b)(\w{2,})$/,
+                        search: function (term, callback) {
+                            var words = getOwners();
+                            callback($.map(words, function (word) {
+                                var w = word.toString().toLowerCase();
+                                if (w.indexOf(term) === 0) {
+                                    return word;
+                                }
+                                return null;
+                            }));
+                        },
+                        replace: function (word) {
+                            return word + ' ';  //add a space behind to remove autocomplete list - gets trimmed server-side
+                        }
+                    }
+                ]);
+            }
+
+            function getOwners() {
+                var ret;
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '@Url.Action("GetOwners", "Board")?' + new Date().getTime(),
+                    success: function (data) {
+                        ret = data;
+                    }
+                });
+                return ret;
+            }
+
+            /* #### DRAG-DROP STUFF ##### */
+
+            var dragItems = document.querySelectorAll('[draggable=true]');
+            for (var i = 0; i < dragItems.length; i++) {
+                dragItems[i].addEventListener('dragstart', function (event) {
+                    event.dataTransfer.setData('Text', this.id);
+                });
+            }
+
+            $('li').bind('dragstart', function (event) { //start dragging
+                draggedItemId = event.target.getAttribute('id');
+                $("#" + draggedItemId).addClass("shadow");
+            });
+            $('ul').bind('dragover', function (event) {
+                var targetId = event.target.getAttribute('id');
+                if (targetId != null && targetId.substr(0, 6) == "column") {
+                    targetColumn = event.target;
+                }
+                $(this).addClass('over');
+                event.preventDefault();
+            });
+            $('ul').bind('dragenter', function (event) {
+                //nop
+            });
+            $('ul').bind('dragleave drop', function (event) {
+                $(this).removeClass('over');
+                //remove "shadow" css
+                $("#" + draggedItemId).removeClass("shadow");
+            });
+            $('li').bind('drop', function (event) {
+                //remove "over" css
+                $(this).parent().removeClass("over");
+
+                //remove "shadow" css
+                $("#" + draggedItemId).removeClass("shadow");
+
+                targetColumn.appendChild(document.getElementById(draggedItemId));
+
+                var columnId = targetColumn.getAttribute('id');
+                columnId = columnId.substr(7);
+                var taskId = draggedItemId.substr(5);
+
+                console.log('#1 dropped task ' + taskId + ' on column ' + columnId);
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("MoveTask")?columnId=" + columnId + "&taskId=" + taskId
+                });
+
+
+                return false;
+            });
+            $('ul').bind('drop', function (event) {
+
+                event.target.appendChild(document.getElementById(draggedItemId));
+                event.preventDefault();
+
+                $("#" + draggedItemId).removeClass("shadow");
+
+                var columnId = event.target.getAttribute('id');
+                columnId = columnId.substr(7);
+                var taskId = draggedItemId.substr(5);
+
+                console.log('#1 dropped task ' + taskId + ' on column ' + columnId);
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("MoveTask")?columnId=" + columnId + "&taskId=" + taskId
+                });
+            });
+        });
+
+    </script>
+}

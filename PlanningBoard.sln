@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanningBoard", "PlanningBoard\PlanningBoard.csproj", "{7F75AD29-5476-4137-BD10-E4A15AE1BD6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanningBoard.Tests", "PlanningBoard.Tests\PlanningBoard.Tests.csproj", "{99256B9D-3358-433A-8665-0A71A370D1EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F75AD29-5476-4137-BD10-E4A15AE1BD6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F75AD29-5476-4137-BD10-E4A15AE1BD6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F75AD29-5476-4137-BD10-E4A15AE1BD6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F75AD29-5476-4137-BD10-E4A15AE1BD6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99256B9D-3358-433A-8665-0A71A370D1EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99256B9D-3358-433A-8665-0A71A370D1EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99256B9D-3358-433A-8665-0A71A370D1EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99256B9D-3358-433A-8665-0A71A370D1EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

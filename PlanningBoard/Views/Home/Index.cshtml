@@ -1,0 +1,86 @@
+﻿@model PlanningBoard.ViewModels.BoardsViewModel
+
+<div class="col-sm-12">
+    @foreach (var board in Model.Boards)
+    {
+        <div class="col-sm-3 board smallshadow" style="margin: 10px;" id="@board.Id">
+            <a style="font-family: IndieFlower; font-size: x-large" href="@Url.Action("Index", "Board", new { id = board.Id })">@board.Name</a>
+        </div>    
+    }
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" action="@Url.Action("AddBoard")">
+                <input type="hidden" id="boardId" name="id" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        <span class="fa fa-pencil-square-o"></span>&nbsp;Add Board
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12">
+                        <label for="Name">Name:</label>
+                        <input id="name" name="Name" class="form-control" style="font-size: x-large; height: 50px"
+                            placeholder="New Board Name" data-val="true" data-val-required="Required" />
+                        <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="row"></div>
+                <br />
+                <div class="modal-footer">
+                    <button id="taskSaveButton" value="Save" class="btn btn-primary"><span class="fa fa-save"></span>&nbsp;Save</button>
+                    <button class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span>&nbsp;Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#NewBoardLink").click(function () {
+                $("#addModal").modal();
+            });
+
+            $(".board").dblclick(function () {
+                var boardId = $(this).attr("id");
+
+                //get the board from database
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '@Url.Action("GetBoard")/' + boardId + '?' + new Date().getTime(),
+                    success: function (data) {
+                        $("#boardId").val(data.id);
+                        $("#name").val(data.name);
+                    }
+                });
+
+                $("#addModal").modal();
+                $("#name").focus();
+            });
+
+
+            // things to do when the new/edit dialog is displayed
+            $("#addModal").on('shown.bs.modal', function () {
+                $("#name").focus();
+            });
+
+            // things to do when the new/edit dialog is closed
+            $("#addModal").on('hidden.bs.modal', function () {
+
+            });
+        });
+
+
+    </script>
+}

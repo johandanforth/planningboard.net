@@ -1,0 +1,77 @@
+﻿@using PlanningBoard.Infrastructure.Alerts
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title - @ViewBag.BoardName.ToString()</title>
+    <link href="~/favicon.ico?ver=1" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/favicon.png?ver=1" rel="icon" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                    <h3 class="logo" style="font-weight: normal">@ViewBag.BoardName.ToString()</h3>
+
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (ViewBag.Controller == "Home")
+                    {
+                        <li><a id="NewBoardLink" style="cursor: pointer; font-family: IndieFlower">+ Add Board</a></li>
+                    }
+                    else
+                    {
+                        if (ViewBag.HasColumns != null && (bool)ViewBag.HasColumns == true)
+                        {
+                            <li><a id="NewTaskLink" style="cursor: pointer; font-family: IndieFlower">+ Add Task</a></li>
+                        }
+                        <li><a id="NewColumnLink" style="cursor: pointer; font-family: IndieFlower">+ Add Column</a></li>
+                        <li><a href="@Url.Action("Index", "Home")" style="cursor: pointer; font-family: IndieFlower"># All Boards</a></li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="body-content">
+        @RenderBody()
+    </div>
+
+    <footer class="text-center">
+        <p>&copy; @DateTime.Now.Year - Made With PlanningBoard.Net</p>
+        <p>Authenticated as @User.Identity.Name</p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @RenderSection("scripts", required: false)
+
+    @if (TempData.GetAlerts().Any())
+    {
+        if (TempData.GetAlerts().Any())
+        {
+            foreach (var alert in TempData.GetAlerts())
+            {
+        <script type="text/javascript">
+            toastr.options.positionClass = "toast-bottom-right";
+            @Html.Raw("toastr." + alert.AlertLevel + "('" + alert.Message + "');");
+        </script>
+       
+            }
+        }
+    }
+</body>
+</html>
