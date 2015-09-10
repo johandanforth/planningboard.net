@@ -1,7 +1,7 @@
 # planningboard.net
 A very basic kanban / planning board with drag drop support written in ASP.NET MVC. 
 
-![Screenshot](/planningboard.png "Screenshot")
+![Screenshot](https://raw.githubusercontent.com/johandanforth/planningboard.net/master/planningboard.PNG "Screenshot")
 
 ##feature plans
 - add support for manaing users
