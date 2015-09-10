@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanningBoard", "PlanningBoard\PlanningBoard.csproj", "{7F75AD29-5476-4137-BD10-E4A15AE1BD6A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanningBoard.Tests", "PlanningBoard.Tests\PlanningBoard.Tests.csproj", "{99256B9D-3358-433A-8665-0A71A370D1EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{DCDC8BE9-A66D-4DB4-833A-901D4632D811}"
+	ProjectSection(SolutionItems) = preProject
+		planningboard.PNG = planningboard.PNG
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
