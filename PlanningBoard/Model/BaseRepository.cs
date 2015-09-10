@@ -31,6 +31,7 @@ namespace PlanningBoard.Model
                     CreateTables(cnn);
 
                     var boardId = (int)InsertBoard(cnn);
+                    InsertUsers(cnn, boardId);
                     InsertColumns(cnn, boardId);
                     InsertColors(cnn);
                     InsertSampleTasks(cnn);
@@ -40,12 +41,20 @@ namespace PlanningBoard.Model
             return new SQLiteConnection("Data Source=" + dbFile);
         }
 
-
         private static void CreateTables(IDbConnection cnn)
         {
             cnn.Execute(@"create table Boards (
                     Id integer primary key AUTOINCREMENT,
                     Name varchar(100) not null)");
+
+            cnn.Execute(@"create table Users (
+                    Id integer primary key AUTOINCREMENT,
+                    Username varchar(255) not null)");
+
+            cnn.Execute(@"create table BoardUsers (
+                    UserId integer not null,
+                    BoardId integer not null,
+                    IsAdmin bool not null)");
 
             cnn.Execute(@"create table Colors (
                     Id integer primary key AUTOINCREMENT,
@@ -74,6 +83,12 @@ namespace PlanningBoard.Model
              {
                  Name = "Sample board",
              });
+        }
+
+        private static void InsertUsers(IDbConnection cnn, int boardId)
+        {
+            var userId = cnn.Insert(new User() { Username = "Johan" });
+            cnn.Insert(new BoardUser() { UserId = (int)userId, BoardId = boardId, IsAdmin = true });
         }
 
         private static void InsertColumns(IDbConnection cnn, int boardId)

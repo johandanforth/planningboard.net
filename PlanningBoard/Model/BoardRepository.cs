@@ -15,6 +15,25 @@ namespace PlanningBoard.Model
             }
         }
 
+        public List<Board> List(int userId)
+        {
+            using (var cnn = GetDbConnection())
+            {
+                return
+                    cnn.Query<Board>(
+                        "select * from boards b inner join boardusers bu on bu.boardid = b.Id and bu.userid = @userId",
+                        new {userId}).ToList();
+            }
+        }
+
+        public List<BoardUser> BoardUsers(int userId)
+        {
+            using (var cnn = GetDbConnection())
+            {
+                return cnn.Query<BoardUser>("select * from boardusers where userid = @userId",new { userId }).ToList();
+            }
+        }
+
         public int Add(Board board)
         {
             using (var cnn = GetDbConnection())

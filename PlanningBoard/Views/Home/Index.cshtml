@@ -3,8 +3,8 @@
 <div class="col-sm-12">
     @foreach (var board in Model.Boards)
     {
-        <div class="col-sm-3 board smallshadow" style="margin: 10px;" id="@board.Id">
-            <a style="font-family: IndieFlower; font-size: x-large" href="@Url.Action("Index", "Board", new { id = board.Id })">@board.Name</a>
+        <div class="col-sm-3 board smallshadow @Html.Raw(board.IsAdmin ? "isadmin" : "")" style="margin: 10px;" id="@board.BoardId">
+            <a style="font-family: IndieFlower; font-size: x-large" href="@Url.Action("Index", "Board", new { id = board.BoardId })">@board.BoardName</a>
         </div>    
     }
 </div>
@@ -51,7 +51,7 @@
                 $("#addModal").modal();
             });
 
-            $(".board").dblclick(function () {
+            $(".board .isadmin").dblclick(function () {
                 var boardId = $(this).attr("id");
 
                 //get the board from database

@@ -5,6 +5,6 @@ namespace PlanningBoard.ViewModels
 {
     public class BoardsViewModel
     {
-        public List<Board> Boards { get; set; }
+        public List<UserBoardsViewModel> Boards { get; set; }
     }
 }

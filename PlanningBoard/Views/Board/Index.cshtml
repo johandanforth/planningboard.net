@@ -18,7 +18,7 @@
                     <li id="@Html.Raw("task_" + task.Id)" draggable="true" class="task smallshadow" 
                         style="background: @Model.Colors.Single(c => c.Id == task.ColorId).ColorCode">
                         <div>
-                            <div class="taskOwner" style="float:left">#@task.Id</div>
+                            <div class="taskOwner" style="float:left; margin: 2px">#@task.Id</div>
                             <div class="taskTitle">
                                 <b>@task.Title</b><br />
                             </div>
@@ -140,53 +140,6 @@
     <script>
         var draggedItemId = null;
         var targetColumn = null;
-        var hubby = null;
-
-        /* ideas about supporting signal-r and multiple users
-        function deleteTask() {
-            if (confirm('Are You Sure?')) {
-                var deltaskid = $("#taskIdField").val();
-                hubby.server.delete(deltaskid).done(function () {
-                    console.log("returned from delete message");
-                    $("#taskDeleteField").val("delete");
-                    $("#editForm").submit();
-                });
-                return false;
-            } else {    //user cancelled delete task
-                $("#taskDeleteField").val("");
-                return false;
-            }
-        }
-
-        function saveTask() {
-                var taskid = $("#taskIdField").val();
-                hubby.server.update(taskid).done(function () {
-                    console.log("returned from update message");
-                    $("#taskDeleteField").val("delete");
-                    $("#editForm").submit();
-                });
-                return false;
-        }
-        */
-
-        function startHubStuff() {
-            hubby = $.connection.taskHub;
-
-            hubby.client.added = function (id) {
-                console.log("added: " + id);
-            };
-            hubby.client.updated = function (id) {
-                console.log("updated: " + id);
-            };
-            hubby.client.deleted = function (id) {
-                console.log("deleted: " + id);
-            };
-
-            $.connection.hub.start().done(function () {
-                console.log('connected...');
-            });
-
-        }
 
         $(document).ready(function () {
 

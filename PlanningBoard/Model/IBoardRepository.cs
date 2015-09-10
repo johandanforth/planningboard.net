@@ -8,5 +8,7 @@ namespace PlanningBoard.Model
         int Add(Board board);
         Board Get(int id);
         void Update(Board board);
+        List<Board> List(int userId);
+        List<BoardUser> BoardUsers(int userId);
     }
 }
